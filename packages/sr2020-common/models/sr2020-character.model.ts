@@ -54,6 +54,7 @@ export interface Targetable {
   pillId: string;
   locusId: string;
   qrCodeId: string;
+  deckId: string;
   droneId: string;
   bodyStorageId: string;
   nodeId: string;

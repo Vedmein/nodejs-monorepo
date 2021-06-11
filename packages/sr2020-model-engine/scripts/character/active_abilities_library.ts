@@ -63,7 +63,7 @@ import {
   prophetAbility,
 } from './ethics';
 import { setAllActiveAbilities } from '@alice/sr2020-model-engine/scripts/character/library_registrator';
-import { droneDangerAbility, droneRepairAbility, enterDrone, exitDrone } from '@alice/sr2020-model-engine/scripts/character/rigger';
+import { cyberdeckRepairAbility, droneDangerAbility, droneRepairAbility, enterDrone, exitDrone } from '@alice/sr2020-model-engine/scripts/character/rigger';
 import { getPillNameAbility, usePillsOnOthersAbility, whatsInTheBodyAbility } from '@alice/sr2020-model-engine/scripts/character/chemo';
 import { nanohiveBackupAbility, nanohiveHealhAbility, nanohiveShooterAbility } from './nanohives';
 import { spiritsRelatedSpell } from '@alice/sr2020-model-engine/scripts/character/spells';
@@ -2887,7 +2887,7 @@ export const kAllActiveAbilitiesList: ActiveAbility[] = [
   {
     id: 'drone-recovery',
     humanReadableName: 'Ремонт дрона',
-    description: 'Восстанавливает работоспособность дрона (необходимо отсканировать сломанного дрона и предмет "ремкомплект")',
+    description: 'Восстанавливает работоспособность дрона (необходимо отсканировать сломанного дрона и предмет "Ремкомплект")',
     target: 'scan',
     targetsSignature: [
       {
@@ -2902,12 +2902,38 @@ export const kAllActiveAbilitiesList: ActiveAbility[] = [
       },
     ],
     cooldownMinutes: (character) => Math.max(20, 150 - 15 * character.intelligence),
-    prerequisites: ['arch-rigger'],
-    availability: 'open',
-    karmaCost: 40,
+    prerequisites: ['in-drone'],
+    availability: 'master',
+    karmaCost: 0,
     minimalEssence: 0,
     fadingPrice: 0,
     eventType: droneRepairAbility.name,
+  },
+  // Сравнивает смотри бонус ремкомплекта и если это 4-1, чинит кибердеку
+  {
+    id: 'cyberdeck-recovery',
+    humanReadableName: 'Ремонт Кибердеки',
+    description: 'Восстанавливает работоспособность Кибердеки (необходимо отсканировать сломанную кибердеку и предмет "Набор никросхем")',
+    target: 'scan',
+    targetsSignature: [
+      {
+        name: 'Дека',
+        allowedTypes: ['cyberdeck'],
+        field: 'deckId',
+      },
+      {
+        name: 'Микросхемы',
+        allowedTypes: ['repair_kit'],
+        field: 'qrCodeId',
+      },
+    ],
+    cooldownMinutes: (character) => Math.max(20, 150 - 15 * character.intelligence),
+    prerequisites: ['in-drone'],
+    availability: 'master',
+    karmaCost: 0,
+    minimalEssence: 0,
+    fadingPrice: 0,
+    eventType: cyberdeckRepairAbility.name,
   },
   // Отсканировать куар целевого персонажа, у целевого персонажа Магия уменьшается на 1.
   {

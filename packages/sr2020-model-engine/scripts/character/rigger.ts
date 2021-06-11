@@ -9,6 +9,7 @@ import { autodocHeal, autodocRevive, healthStateTransition } from './death_and_r
 import {
   BodyStorageQrData,
   DroneQrData,
+  CyberDeckQrData,
   MerchandiseQrData,
   RepairKitQrData,
   typedQrData,
@@ -20,6 +21,7 @@ import { DroneType, kDroneAbilityIds, kDroneDangerAbilityIds } from '@alice/sr20
 import { repairDrone, startUsingDroneOrSpirit, stopUsingDroneOrSpirit } from '@alice/sr2020-model-engine/scripts/qr/drones';
 import { sendNotificationAndHistoryRecord } from '@alice/sr2020-model-engine/scripts/character/util';
 import { addFeatureToModel, removeFeatureFromModel } from '@alice/sr2020-model-engine/scripts/character/features';
+import { repairCyberdeck } from '../qr/cyberdecks';
 
 const kInDroneModifierId = 'in-the-drone';
 
@@ -236,6 +238,9 @@ export function droneRepairAbility(api: EventModelApi<Sr2020Character>, data: Ac
   if (!drone.broken) {
     throw new UserVisibleError('Этот дрон не сломан.');
   }
+  if (typedQrData<RepairKitQrData>(api.aquired(QrCode, data.qrCodeId!)).bonus > 10) {
+    throw new UserVisibleError('Это Набор микросхем для кибердеки, ремонт не удался.');
+  }
 
   const droneRepairSkill = api.model.drones.recoverySkill + typedQrData<RepairKitQrData>(api.aquired(QrCode, data.qrCodeId!)).bonus;
   if (droneRepairSkill < drone.sensor) {
@@ -243,6 +248,24 @@ export function droneRepairAbility(api: EventModelApi<Sr2020Character>, data: Ac
   }
 
   api.sendOutboundEvent(QrCode, data.droneId!, repairDrone, {});
+  api.sendOutboundEvent(QrCode, data.qrCodeId!, consume, {});
+}
+
+export function cyberdeckRepairAbility(api: EventModelApi<Sr2020Character>, data: ActiveAbilityData) {
+  const cyberdeck = typedQrData<CyberDeckQrData>(api.aquired(QrCode, data.deckId!));
+  if (!cyberdeck.broken) {
+    throw new UserVisibleError('Эта кибердека не сломана.');
+  }
+  if (typedQrData<RepairKitQrData>(api.aquired(QrCode, data.deckId!)).bonus < 10) {
+    throw new UserVisibleError('Это ремкомплект для дрона, ремонт не удался.');
+  }
+
+  const cyberdeckRepairSkill = api.model.drones.recoverySkill + typedQrData<RepairKitQrData>(api.aquired(QrCode, data.qrCodeId!)).bonus;
+  if (cyberdeckRepairSkill < 22) {
+    throw new UserVisibleError('Ремонт не удался.');
+  }
+
+  api.sendOutboundEvent(QrCode, data.deckId!, repairCyberdeck, {});
   api.sendOutboundEvent(QrCode, data.qrCodeId!, consume, {});
 }
 
