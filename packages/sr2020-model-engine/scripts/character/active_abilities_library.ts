@@ -63,7 +63,7 @@ import {
   prophetAbility,
 } from './ethics';
 import { setAllActiveAbilities } from '@alice/sr2020-model-engine/scripts/character/library_registrator';
-import { cyberdeckRepairAbility, droneDangerAbility, droneRepairAbility, enterDrone, exitDrone } from '@alice/sr2020-model-engine/scripts/character/rigger';
+import { cyberDeckRepairAbility, droneDangerAbility, droneRepairAbility, enterDrone, exitDrone } from '@alice/sr2020-model-engine/scripts/character/rigger';
 import { getPillNameAbility, usePillsOnOthersAbility, whatsInTheBodyAbility } from '@alice/sr2020-model-engine/scripts/character/chemo';
 import { nanohiveBackupAbility, nanohiveHealhAbility, nanohiveShooterAbility } from './nanohives';
 import { spiritsRelatedSpell } from '@alice/sr2020-model-engine/scripts/character/spells';
@@ -2933,7 +2933,7 @@ export const kAllActiveAbilitiesList: ActiveAbility[] = [
     karmaCost: 0,
     minimalEssence: 0,
     fadingPrice: 0,
-    eventType: cyberdeckRepairAbility.name,
+    eventType: cyberDeckRepairAbility.name,
   },
   // Отсканировать куар целевого персонажа, у целевого персонажа Магия уменьшается на 1.
   {

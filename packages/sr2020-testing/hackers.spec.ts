@@ -78,7 +78,7 @@ describe('Hackers-related events', function () {
           qrCode: expect.objectContaining({
             data: expect.objectContaining({
               id: 'cyberdeck-chariot',
-              modSlots: 3,
+              modSlots: 3, 
             }),
             type: 'cyberdeck',
           }),
@@ -87,6 +87,11 @@ describe('Hackers-related events', function () {
         },
       }),
     );
+    
+    {
+      const { workModel } = await fixture.getQrCode('0');
+      expect(typedQrData<CyberDeckQrData>(workModel).inUse).toBe(true);
+    }
 
     await fixture.useAbility({ id: 'jack-out' });
     expect(fixture.getPubSubNotifications()).toContainEqual(
@@ -97,6 +102,11 @@ describe('Hackers-related events', function () {
         }),
       }),
     );
+
+    {
+      const { workModel } = await fixture.getQrCode('0');
+      expect(typedQrData<CyberDeckQrData>(workModel).inUse).toBe(false);
+    }
   });
 
   it('Activating software', async () => {
