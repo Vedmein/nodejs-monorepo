@@ -9,7 +9,7 @@ async function run() {
   const spreadsheetId = '1Vm1nbS-Gs9H_5FZaJ_cnA5hnCaeDZLfNfwxayl70evc';
 
   // Parse level descriptions
-  const data = await getDataFromSpreadsheet(spreadsheetId, 'Дроны v2!A3:K32');
+  const data = await getDataFromSpreadsheet(spreadsheetId, 'Дроны v2!A3:K34');
   const header = data[0];
   if (
     header.slice(0, 11).join('  ') !=
